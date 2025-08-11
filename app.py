@@ -67,10 +67,18 @@ splitted_pages = text_splitter.split_documents(docs)
 print(f" 分割後のチャンク数: {len(splitted_pages)}")
 
 # --- Embeddings生成（modelも明示） ---
-embeddings = OpenAIEmbeddings(
-    model="text-embedding-3-small",
-    api_key=key
-)
+from pydantic.v1.error_wrappers import ValidationError
+
+try:
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small",      # ここはこのままでOK
+        api_key=st.secrets["OPENAI_API_KEY"] # ここもそのまま
+    )
+except ValidationError as e:
+    st.error("OpenAIEmbeddings の設定値で検証エラーが出ています（詳細 ↓ ）")
+    st.json(e.errors())   # ← どのフィールドで落ちてるかが表示されます
+    st.stop()
+
 
 # --- ベクターストア ---
 all_db_path = os.path.join(base_dir, ".db")
