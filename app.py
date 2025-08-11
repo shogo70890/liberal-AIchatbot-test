@@ -26,12 +26,12 @@ if not key.startswith("sk-"):
     st.stop()
 os.environ["OPENAI_API_KEY"] = key  # 念のため環境変数にも反映
 
-st.title("FITPLACE質問回答アプリ")
+st.title("ジム運営 質問回答アプリ")
 
 # アプリの概要や操作方法を表示
 st.markdown("""
 ### 
-このアプリでは、FITPLACEの資料を基に質問に答えます。
+このアプリでは、ジム運営の資料を基に質問に答えます。
 質問内容を入力して「送信」ボタンを押してください。
 """)
 
