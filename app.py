@@ -61,7 +61,10 @@ text_splitter = CharacterTextSplitter(
 splitted_pages = text_splitter.split_documents(docs)
 print(f" 分割後のチャンク数: {len(splitted_pages)}")
 
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(
+    api_key=st.secrets["OPENAI_API_KEY"],
+    model="text-embedding-3-small"
+)
 
 # --- ベクターストア ---
 all_db_path = os.path.join(base_dir, ".db")
