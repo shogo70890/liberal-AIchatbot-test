@@ -24,40 +24,6 @@ st.markdown("""
 # --- 会話履歴初期化 ---
 chat_history = []
 
-# 入力フォーム
-input_text = st.text_input("質問内容を入力してください：", placeholder="例：ウェイトマシンのメンテナンスについて教えて")
-
-# 送信ボタン
-if st.button("送信"):
-    if input_text:
-        # 入力値をqueryとして利用
-        query = input_text
-
-        # RAGチェーンで回答を取得
-        result = rag_chain.invoke({
-            "input": query,
-            "chat_history": chat_history
-        })
-
-        # 回答を表示
-        st.write("回答:", result["answer"]["text"])
-
-        # 根拠文書の表示
-        if "source_documents" in result:
-            st.write("根拠となった文書:")
-            for doc in result["source_documents"]:
-                source = doc.metadata.get("source", "不明")
-                page = doc.metadata.get("page", "不明")
-                st.write(f"・{source}（ページ: {page}）")
-
-        # 会話履歴に追加
-        chat_history.extend([
-            HumanMessage(content=query),
-            AIMessage(content=result["answer"]["text"])
-        ])
-    else:
-        st.warning("質問内容を入力してください！")
-
 # --- データ取得 ---
 base_dir = "data"
 docs = []
@@ -167,3 +133,37 @@ question_answer_chain = LLMChain(
 )
 
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+
+# 入力フォーム
+input_text = st.text_input("質問内容を入力してください：", placeholder="例：ウェイトマシンのメンテナンスについて教えて")
+
+# 送信ボタン
+if st.button("送信"):
+    if input_text:
+        # 入力値をqueryとして利用
+        query = input_text
+
+        # RAGチェーンで回答を取得
+        result = rag_chain.invoke({
+            "input": query,
+            "chat_history": chat_history
+        })
+
+        # 回答を表示
+        st.write("回答:", result["answer"]["text"])
+
+        # 根拠文書の表示
+        if "source_documents" in result:
+            st.write("根拠となった文書:")
+            for doc in result["source_documents"]:
+                source = doc.metadata.get("source", "不明")
+                page = doc.metadata.get("page", "不明")
+                st.write(f"・{source}（ページ: {page}）")
+
+        # 会話履歴に追加
+        chat_history.extend([
+            HumanMessage(content=query),
+            AIMessage(content=result["answer"]["text"])
+        ])
+    else:
+        st.warning("質問内容を入力してください！")
