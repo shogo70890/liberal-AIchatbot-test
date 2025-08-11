@@ -12,8 +12,13 @@ import os
 import shutil
 import glob
 
-# API KEY 
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+# --- APIキー確認と設定 ---
+import os
+key = st.secrets.get("OPENAI_API_KEY", "")
+if not key.startswith("sk-"):
+    st.error("OPENAI_API_KEY が正しく設定されていません。Settings → Secrets を確認してください。")
+    st.stop()
+os.environ["OPENAI_API_KEY"] = key  # 念のため環境変数にも反映
 
 st.title("FITPLACE質問回答アプリ")
 
@@ -61,9 +66,10 @@ text_splitter = CharacterTextSplitter(
 splitted_pages = text_splitter.split_documents(docs)
 print(f" 分割後のチャンク数: {len(splitted_pages)}")
 
+# --- Embeddings生成（modelも明示） ---
 embeddings = OpenAIEmbeddings(
-    api_key=st.secrets["OPENAI_API_KEY"],
-    model="text-embedding-3-small"
+    model="text-embedding-3-small",
+    api_key=key
 )
 
 # --- ベクターストア ---
