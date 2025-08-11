@@ -48,3 +48,4 @@ tiktoken
 pymupdf
 chromadb>=0.5
 python-dotenv
+langchain-community==0.2.12
