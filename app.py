@@ -6,6 +6,12 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
+# SQLite を FTS5 対応版に差し替え（Chroma 用）
+import sys
+import pysqlite3
+sys.modules["sqlite3"] = pysqlite3
+
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import PyMuPDFLoader
 import os
