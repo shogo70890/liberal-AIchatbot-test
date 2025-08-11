@@ -12,6 +12,9 @@ import os
 import shutil
 import glob
 
+# API KEY 
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
 st.title("FITPLACE質問回答アプリ")
 
 # アプリの概要や操作方法を表示
