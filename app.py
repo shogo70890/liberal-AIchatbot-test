@@ -80,21 +80,22 @@ except ValidationError as e:
     st.stop()
 
 
-# --- ベクターストア ---
+# --- ベクターストア（初回だけ作成、以降は開くだけ） ---
 all_db_path = os.path.join(base_dir, ".db")
 
-all_db = None
-if os.path.isdir(all_db_path):
+if os.path.isdir(all_db_path) and os.listdir(all_db_path):
+    # 既存DBをそのまま使う（再インデックスしない）
     all_db = Chroma(persist_directory=all_db_path, embedding_function=embeddings)
-    all_db.add_documents(splitted_pages)
-    print(" .db に追加完了（追記）")
+    print("既存 .db を使用（再インデックスなし）")
 else:
+    # 初回のみインデックスを作成
     all_db = Chroma.from_documents(
         splitted_pages,
         embedding=embeddings,
         persist_directory=all_db_path
     )
-    print(" .db を新規作成")
+    all_db.persist()
+    print(" .db を新規作成（初回のみ）")
 
 # --- ベクターストアの読み込み ---
 base_dir = "data"
