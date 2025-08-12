@@ -172,19 +172,34 @@ if st.button("送信"):
 
         # 読み込みアイコンを表示しながら処理
         with st.spinner("回答を生成中です..."):
-            # RAGチェーンで回答を取得
-            result = rag_chain.invoke({
-                "input": query,
-                "chat_history": chat_history
-            })
+            # まず関連文書を取得
+            relevant_docs = retriever.get_relevant_documents(query)
+            
+            # コンテキストを作成
+            context = "\n\n".join([doc.page_content for doc in relevant_docs])
+            
+            # プロンプトを作成
+            prompt_text = f"""
+あなたは優秀な質問応答アシスタントです。以下のcontextを使用して質問に答えてください。
+また答えが分からない場合は、無理に答えようとせず「分からない」という旨を答えてください。
 
-        # 回答を表示
-        st.write("回答:", result["answer"]["text"])
+context:
+{context}
+
+質問: {query}
+"""
+
+        # ストリーミング表示
+        def generate_response():
+            for chunk in llm.stream(prompt_text):
+                yield chunk.content
+
+        response_text = st.write_stream(generate_response())
 
         # 根拠文書の表示
-        if "source_documents" in result:
+        if relevant_docs:
             st.write("根拠となった文書:")
-            for doc in result["source_documents"]:
+            for doc in relevant_docs:
                 source = doc.metadata.get("source", "不明")
                 page = doc.metadata.get("page", "不明")
                 st.write(f"・{source}（ページ: {page}）")
@@ -192,7 +207,7 @@ if st.button("送信"):
         # 会話履歴に追加
         chat_history.extend([
             HumanMessage(content=query),
-            AIMessage(content=result["answer"]["text"])
+            AIMessage(content=response_text)
         ])
     else:
         st.warning("質問内容を入力してください！")
