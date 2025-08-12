@@ -77,8 +77,8 @@ from pydantic.v1.error_wrappers import ValidationError
 
 try:
     embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small",      # ここはこのままでOK
-        api_key=st.secrets["OPENAI_API_KEY"] # ここもそのまま
+        model="text-embedding-3-small",      
+        api_key=st.secrets["OPENAI_API_KEY"] 
     )
 except ValidationError as e:
     st.error("OpenAIEmbeddings の設定値で検証エラーが出ています（詳細 ↓ ）")
@@ -170,11 +170,13 @@ if st.button("送信"):
         # 入力値をqueryとして利用
         query = input_text
 
-        # RAGチェーンで回答を取得
-        result = rag_chain.invoke({
-            "input": query,
-            "chat_history": chat_history
-        })
+        # 読み込みアイコンを表示しながら処理
+        with st.spinner("回答を生成中です..."):
+            # RAGチェーンで回答を取得
+            result = rag_chain.invoke({
+                "input": query,
+                "chat_history": chat_history
+            })
 
         # 回答を表示
         st.write("回答:", result["answer"]["text"])
