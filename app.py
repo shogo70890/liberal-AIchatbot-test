@@ -6,6 +6,8 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.retrievers import EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever
 
 # SQLite を FTS5 対応版に差し替え（Chroma 用）
 import sys
@@ -17,6 +19,7 @@ from langchain_community.document_loaders import PyMuPDFLoader
 import os
 import shutil
 import glob
+import pickle
 
 # --- APIキー確認と設定 ---
 import os
@@ -57,11 +60,6 @@ for file in os.listdir(base_dir):
         print(f"{file} を処理しました")
     except Exception as e:
         print(f"{file} の読み込み失敗: {e}")
-
-# docs には全PDFのページデータが格納されます
-
-    except Exception as e:
-        print(f" 通常部門（{theme}）: {file} の読み込み失敗: {e}")
 
 text_splitter = CharacterTextSplitter(
     chunk_size=500,
@@ -107,7 +105,32 @@ else:
 base_dir = "data"
 db_path = os.path.join(base_dir, ".db")
 
-retriever = Chroma(persist_directory=db_path, embedding_function=embeddings).as_retriever()
+# ベクトル検索用のretriever
+vector_retriever = Chroma(persist_directory=db_path, embedding_function=embeddings).as_retriever()
+
+# --- BM25 Retriever の設定 ---
+bm25_path = os.path.join(base_dir, "bm25_retriever.pkl")
+
+if os.path.exists(bm25_path):
+    # 既存のBM25 Retrieverを読み込み
+    with open(bm25_path, "rb") as f:
+        bm25_retriever = pickle.load(f)
+    print("既存 BM25 Retriever を使用")
+else:
+    # 初回のみBM25 Retrieverを作成
+    bm25_retriever = BM25Retriever.from_documents(splitted_pages)
+    bm25_retriever.k = 4  # 取得する文書数
+    
+    # BM25 Retrieverを保存
+    with open(bm25_path, "wb") as f:
+        pickle.dump(bm25_retriever, f)
+    print("BM25 Retriever を新規作成")
+
+# --- ハイブリッド検索 (Ensemble Retriever) ---
+retriever = EnsembleRetriever(
+    retrievers=[vector_retriever, bm25_retriever],
+    weights=[0.6, 0.4]  # ベクトル検索60%, BM25検索40%
+)
 
 
 # --- 会話履歴をもとに質問を再構成するためのプロンプト ---
@@ -208,29 +231,6 @@ context:
                 else:
                     page_display = "不明"
                 st.write(f"・{source}（ページ: {page_display}）")
-
-        # 関連質問の提案
-        st.write("---")
-        st.write("**関連する質問の提案:**")
-        
-        suggestion_prompt = f"""
-以下の質問と回答に基づいて、ユーザーが次に聞きたくなりそうな関連質問を3つ提案してください。
-ジム運営に関する実践的で具体的な質問にしてください。
-
-元の質問: {query}
-回答: {response_text}
-
-関連質問を以下の形式で提案してください：
-1. [質問1]
-2. [質問2]
-3. [質問3]
-"""
-        
-        try:
-            suggestion_response = llm.invoke(suggestion_prompt)
-            st.write(suggestion_response.content)
-        except Exception as e:
-            st.write("関連質問の生成中にエラーが発生しました。")
 
         # 会話履歴に追加
         chat_history.extend([
