@@ -209,6 +209,29 @@ context:
                     page_display = "不明"
                 st.write(f"・{source}（ページ: {page_display}）")
 
+        # 関連質問の提案
+        st.write("---")
+        st.write("**関連する質問の提案:**")
+        
+        suggestion_prompt = f"""
+以下の質問と回答に基づいて、ユーザーが次に聞きたくなりそうな関連質問を3つ提案してください。
+ジム運営に関する実践的で具体的な質問にしてください。
+
+元の質問: {query}
+回答: {response_text}
+
+関連質問を以下の形式で提案してください：
+1. [質問1]
+2. [質問2]
+3. [質問3]
+"""
+        
+        try:
+            suggestion_response = llm.invoke(suggestion_prompt)
+            st.write(suggestion_response.content)
+        except Exception as e:
+            st.write("関連質問の生成中にエラーが発生しました。")
+
         # 会話履歴に追加
         chat_history.extend([
             HumanMessage(content=query),
