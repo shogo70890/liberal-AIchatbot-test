@@ -189,12 +189,12 @@ context:
 質問: {query}
 """
 
-        # ストリーミング表示
-        def generate_response():
-            for chunk in llm.stream(prompt_text):
-                yield chunk.content
+            # ストリーミング表示
+            def generate_response():
+                for chunk in llm.stream(prompt_text):
+                    yield chunk.content
 
-        response_text = st.write_stream(generate_response())
+            response_text = st.write_stream(generate_response())
 
         # 根拠文書の表示
         if relevant_docs:
