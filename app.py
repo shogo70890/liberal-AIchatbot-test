@@ -6,8 +6,6 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.retrievers import EnsembleRetriever
-from langchain_community.retrievers import BM25Retriever
 
 # SQLite を FTS5 対応版に差し替え（Chroma 用）
 import sys
@@ -19,7 +17,6 @@ from langchain_community.document_loaders import PyMuPDFLoader
 import os
 import shutil
 import glob
-import pickle
 
 # --- APIキー確認と設定 ---
 import os
@@ -105,32 +102,7 @@ else:
 base_dir = "data"
 db_path = os.path.join(base_dir, ".db")
 
-# ベクトル検索用のretriever
-vector_retriever = Chroma(persist_directory=db_path, embedding_function=embeddings).as_retriever()
-
-# --- BM25 Retriever の設定 ---
-bm25_path = os.path.join(base_dir, "bm25_retriever.pkl")
-
-if os.path.exists(bm25_path):
-    # 既存のBM25 Retrieverを読み込み
-    with open(bm25_path, "rb") as f:
-        bm25_retriever = pickle.load(f)
-    print("既存 BM25 Retriever を使用")
-else:
-    # 初回のみBM25 Retrieverを作成
-    bm25_retriever = BM25Retriever.from_documents(splitted_pages)
-    bm25_retriever.k = 4  # 取得する文書数
-    
-    # BM25 Retrieverを保存
-    with open(bm25_path, "wb") as f:
-        pickle.dump(bm25_retriever, f)
-    print("BM25 Retriever を新規作成")
-
-# --- ハイブリッド検索 (Ensemble Retriever) ---
-retriever = EnsembleRetriever(
-    retrievers=[vector_retriever, bm25_retriever],
-    weights=[0.6, 0.4]  # ベクトル検索60%, BM25検索40%
-)
+retriever = Chroma(persist_directory=db_path, embedding_function=embeddings).as_retriever()
 
 
 # --- 会話履歴をもとに質問を再構成するためのプロンプト ---
@@ -204,7 +176,7 @@ if st.button("送信"):
             # プロンプトを作成
             prompt_text = f"""
 あなたは優秀な質問応答アシスタントです。以下のcontextを使用して質問に答えてください。
-また答えが分からない場合は、無理に答えようとせず「分からない」という旨を答えてください。
+また答えが分からない場合は、無理に答えようとせず「分かりません」という旨を答えてください。
 
 context:
 {context}
