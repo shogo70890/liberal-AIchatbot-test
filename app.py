@@ -201,8 +201,13 @@ context:
             st.write("根拠となった文書:")
             for doc in relevant_docs:
                 source = doc.metadata.get("source", "不明")
-                page = doc.metadata.get("page", "不明")
-                st.write(f"・{source}（ページ: {page}）")
+                page = doc.metadata.get("page", None)
+                # ページ番号を1から始まるように調整
+                if page is not None and isinstance(page, int):
+                    page_display = page + 1
+                else:
+                    page_display = "不明"
+                st.write(f"・{source}（ページ: {page_display}）")
 
         # 会話履歴に追加
         chat_history.extend([
