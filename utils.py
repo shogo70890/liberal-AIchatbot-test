@@ -6,7 +6,7 @@
 # ライブラリの読み込み
 ############################################################
 import os
-from dotenv import load_dotenv
+
 import streamlit as st
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.schema import HumanMessage
@@ -14,14 +14,6 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import constants as ct
-
-
-############################################################
-# 設定関連
-############################################################
-# 「.env」ファイルで定義した環境変数の読み込み
-load_dotenv()
-
 
 ############################################################
 # 関数定義
@@ -70,7 +62,8 @@ def get_llm_response(chat_message):
         LLMからの回答
     """
     # LLMのオブジェクトを用意
-    llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE)
+    import streamlit as st
+    llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
     # 会話履歴なしでもLLMに理解してもらえる、独立した入力テキストを取得するためのプロンプトテンプレートを作成
     question_generator_template = ct.SYSTEM_PROMPT_CREATE_INDEPENDENT_TEXT
