@@ -133,11 +133,9 @@ def display_contact_llm_response(llm_response):
     # - 「message」: 補足メッセージ
     # - 「file_path_list」: ファイルパスの一覧リスト
     content = {}
-    content["mode"] = ct.ANSWER_MODE_2
     content["answer"] = llm_response["answer"]
     # 参照元のドキュメントが取得できた場合のみ
     if llm_response["answer"] != ct.INQUIRY_NO_MATCH_ANSWER:
         content["message"] = message
         content["file_info_list"] = file_info_list
-
     return content

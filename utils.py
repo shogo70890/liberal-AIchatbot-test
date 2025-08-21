@@ -62,7 +62,6 @@ def get_llm_response(chat_message):
         LLMからの回答
     """
     # LLMのオブジェクトを用意
-    import streamlit as st
     llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE, openai_api_key=st.secrets["OPENAI_API_KEY"])
 
     # 会話履歴なしでもLLMに理解してもらえる、独立した入力テキストを取得するためのプロンプトテンプレートを作成
@@ -90,4 +89,7 @@ def get_llm_response(chat_message):
     llm_response = question_answer_chain.invoke({"input": chat_message, "chat_history": st.session_state.chat_history})
     # LLMレスポンスを会話履歴に追加
     st.session_state.chat_history.extend([HumanMessage(content=chat_message), llm_response["answer"]])
+    # contextキーがなければ空リストを追加（components.pyで必ず参照されるため）
+    if "context" not in llm_response:
+        llm_response["context"] = []
     return llm_response
