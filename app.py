@@ -58,6 +58,7 @@ for file in os.listdir(base_dir):
     except Exception as e:
         print(f"{file} の読み込み失敗: {e}")
 
+# --- チャンク分割 ---
 text_splitter = CharacterTextSplitter(
     chunk_size=500,
     chunk_overlap=50,
