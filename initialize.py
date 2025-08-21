@@ -110,7 +110,7 @@ def initialize_retriever():
             doc.metadata[key] = adjust_string(doc.metadata[key])
     
     # 埋め込みモデルの用意
-    embeddings = OpenAIEmbeddings(api_key=st.secrets["OPENAI_API_KEY"])
+    embeddings = OpenAIEmbeddings(openai_api_key=st.secrets["OPENAI_API_KEY"])
     
     # チャンク分割用のオブジェクトを作成
     text_splitter = CharacterTextSplitter(
