@@ -13,7 +13,6 @@ import sys
 import unicodedata
 
 import streamlit as st
-from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
@@ -151,19 +150,7 @@ def load_data_sources():
     docs_all = []
     # ファイル読み込みの実行（渡した各リストにデータが格納される）
     recursive_file_check(ct.RAG_TOP_FOLDER_PATH, docs_all)
-
-    web_docs_all = []
-    # ファイルとは別に、指定のWebページ内のデータも読み込み
-    # 読み込み対象のWebページ一覧に対して処理
-    for web_url in ct.WEB_URL_LOAD_TARGETS:
-        # 指定のWebページを読み込み
-        loader = WebBaseLoader(web_url)
-        web_docs = loader.load()
-        # for文の外のリストに読み込んだデータソースを追加
-        web_docs_all.extend(web_docs)
-    # 通常読み込みのデータソースにWebページのデータを追加
-    docs_all.extend(web_docs_all)
-
+    
     return docs_all
 
 
