@@ -13,7 +13,6 @@ import sys
 import unicodedata
 
 import streamlit as st
-from docx import Document
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
