@@ -20,15 +20,7 @@ def display_app_title():
     タイトル表示
     """
     st.markdown(f"## {ct.APP_NAME}")
-
-
-def display_select_mode():
-    """
-    サイドバーに社内問い合わせ専用の説明のみ表示
-    """
-    with st.sidebar:
-        st.markdown("---")
-
+    
 
 def display_initial_ai_message():
     """
