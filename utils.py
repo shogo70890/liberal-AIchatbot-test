@@ -15,17 +15,6 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import constants as ct
 
-############################################################
-# APIキーの設定
-############################################################
-import logging
-if "OPENAI_API_KEY" in st.secrets:
-    try:
-        os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
-    except Exception as e:
-        logging.warning(f"Failed to set OPENAI_API_KEY: {e}")
-else:
-    logging.warning("OPENAI_API_KEY not found in Streamlit secrets.")
 
 ############################################################
 # 関数定義
