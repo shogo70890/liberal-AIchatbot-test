@@ -6,8 +6,8 @@
 # ライブラリの読み込み
 ############################################################
 import os
-
 import streamlit as st
+
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.schema import HumanMessage
 from langchain_openai import ChatOpenAI
@@ -18,14 +18,12 @@ import constants as ct
 ############################################################
 # APIキーの設定
 ############################################################
-
-try:
-    import streamlit as st
-    if "OPENAI_API_KEY" in st.secrets:
-        os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
-except Exception:
-    pass
-
+import logging
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
+else:
+    logging.warning("OPENAI_API_KEY not found in Streamlit secrets.")
+    logging.warning(f"Failed to set OPENAI_API_KEY from Streamlit secrets: {e}")
 
 ############################################################
 # 関数定義
