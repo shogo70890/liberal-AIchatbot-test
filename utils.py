@@ -20,10 +20,12 @@ import constants as ct
 ############################################################
 import logging
 if "OPENAI_API_KEY" in st.secrets:
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
+    try:
+        os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
+    except Exception as e:
+        logging.warning(f"Failed to set OPENAI_API_KEY: {e}")
 else:
     logging.warning("OPENAI_API_KEY not found in Streamlit secrets.")
-    logging.warning(f"Failed to set OPENAI_API_KEY from Streamlit secrets: {e}")
 
 ############################################################
 # 関数定義
