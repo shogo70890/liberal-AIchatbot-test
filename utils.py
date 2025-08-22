@@ -16,6 +16,18 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 import constants as ct
 
 ############################################################
+# APIキーの設定
+############################################################
+
+try:
+    import streamlit as st
+    if "OPENAI_API_KEY" in st.secrets:
+        os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"].strip()
+except Exception:
+    pass
+
+
+############################################################
 # 関数定義
 ############################################################
 
