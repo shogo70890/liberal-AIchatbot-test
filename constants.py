@@ -53,10 +53,7 @@ TEMPERATURE = 0.5
 # ==========================================
 RAG_TOP_FOLDER_PATH = "./data"
 SUPPORTED_EXTENSIONS = {
-    ".pdf": PyMuPDFLoader,
-    ".docx": Docx2txtLoader,
-    ".csv": lambda path: CSVLoader(path, encoding="utf-8"),
-    ".txt": lambda path: TextLoader(path, encoding="utf-8")
+    ".pdf": PyMuPDFLoader
 }
 
 
