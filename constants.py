@@ -90,7 +90,7 @@ INQUIRY_NO_MATCH_ANSWER = "回答に必要な情報が見つかりませんで�
 # エラー・警告メッセージ
 # ==========================================
 COMMON_ERROR_MESSAGE = "このエラーが繰り返し発生する場合は、管理者にお問い合わせください。"
-
+INITIALIZE_ERROR_MESSAGE = "初期化処理に失敗しました。"
 CONVERSATION_LOG_ERROR_MESSAGE = "過去の会話履歴の表示に失敗しました。"
 GET_LLM_RESPONSE_ERROR_MESSAGE = "回答生成に失敗しました。"
 DISP_ANSWER_ERROR_MESSAGE = "回答表示に失敗しました。"
