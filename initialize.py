@@ -18,6 +18,8 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import constants as ct
 
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
 ############################################################
 # 関数定義
 ############################################################
