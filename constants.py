@@ -16,13 +16,13 @@ from langchain_community.document_loaders.csv_loader import CSVLoader
 # ==========================================
 # 画面表示系
 # ==========================================
-APP_NAME = "社内情報特化型生成AI検索アプリ"
-CHAT_INPUT_HELPER_TEXT = "こちらからメッセージを送信してください。"
+APP_NAME = "Liberal AI Chatbot"
+CHAT_INPUT_HELPER_TEXT = "質問してみましょう"
 DOC_SOURCE_ICON = ":material/description: "
 LINK_SOURCE_ICON = ":material/link: "
 WARNING_ICON = ":material/warning:"
 ERROR_ICON = ":material/error:"
-SPINNER_TEXT = "回答生成中..."
+SPINNER_TEXT = "回答を生成中..."
 
 
 # ==========================================
