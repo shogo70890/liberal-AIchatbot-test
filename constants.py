@@ -16,7 +16,7 @@ from langchain_community.document_loaders.csv_loader import CSVLoader
 # ==========================================
 # 画面表示系
 # ==========================================
-APP_NAME = "🤖Liberal AI Chatbot"
+APP_NAME = "Liberal AI Chatbot🤖"
 CHAT_INPUT_HELPER_TEXT = "質問してみましょう"
 DOC_SOURCE_ICON = ":material/description: "
 LINK_SOURCE_ICON = ":material/link: "
