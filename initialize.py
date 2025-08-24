@@ -186,17 +186,17 @@ def recursive_file_check(path, docs_all):
         docs_all: データソースを格納する用のリスト
     """
     # パスがフォルダかどうかを確認
+    logger = logging.getLogger(ct.LOGGER_NAME)
     if os.path.isdir(path):
-        # フォルダの場合、フォルダ内のファイル/フォルダ名の一覧を取得
+        print(f"ディレクトリ探索: {path}")
+        logger.info(f"ディレクトリ探索: {path}")
         files = os.listdir(path)
-        # 各ファイル/フォルダに対して処理
         for file in files:
-            # ファイル/フォルダ名だけでなく、フルパスを取得
             full_path = os.path.join(path, file)
-            # フルパスを渡し、再帰的にファイル読み込みの関数を実行
             recursive_file_check(full_path, docs_all)
     else:
-        # パスがファイルの場合、ファイル読み込み
+        print(f"ファイル検出: {path}")
+        logger.info(f"ファイル検出: {path}")
         file_load(path, docs_all)
 
 
@@ -214,11 +214,18 @@ def file_load(path, docs_all):
     file_name = os.path.basename(path)
 
     # 想定していたファイル形式の場合のみ読み込む
+    logger = logging.getLogger(ct.LOGGER_NAME)
     if file_extension in ct.SUPPORTED_EXTENSIONS:
-        # ファイルの拡張子に合ったdata loaderを使ってデータ読み込み
+        print(f"対応拡張子: {file_extension} 読み込み開始: {path}")
+        logger.info(f"対応拡張子: {file_extension} 読み込み開始: {path}")
         loader = ct.SUPPORTED_EXTENSIONS[file_extension](path)
         docs = loader.load()
+        print(f"読み込み完了: {path} ドキュメント数: {len(docs)}")
+        logger.info(f"読み込み完了: {path} ドキュメント数: {len(docs)}")
         docs_all.extend(docs)
+    else:
+        print(f"未対応拡張子: {file_extension} スキップ: {path}")
+        logger.info(f"未対応拡張子: {file_extension} スキップ: {path}")
 
 def adjust_string(s):
     """
