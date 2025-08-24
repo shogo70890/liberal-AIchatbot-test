@@ -19,7 +19,6 @@ import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
 
-os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 ############################################################
 # 2. 設定関連
