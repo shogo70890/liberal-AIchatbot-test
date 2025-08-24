@@ -18,7 +18,7 @@ def display_app_title():
     """
     タイトル表示
     """
-    st.markdown(f"#### {ct.APP_NAME}")
+    st.markdown(f"##### {ct.APP_NAME}")
     
 
 def display_initial_ai_message():
