@@ -1,5 +1,3 @@
-# app.py
-import utils   # ← ここでキー設定が走る
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
@@ -20,6 +18,9 @@ from initialize import initialize
 import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
+
+# app.py
+import utils   # ← ここでキー設定が走る
 
 ############################################################
 # 2. 設定関連
