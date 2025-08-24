@@ -29,22 +29,22 @@ def initialize():
     # 初期化データの用意
     initialize_session_state()
     # ログ出力用にセッションIDを生成
-    initialize_session_state()
-    print("セッション状態の初期化が完了しました")
-    # ログ出力用にセッションIDを生成
     initialize_session_id()
-    print("セッションIDの生成が完了しました")
     # ログ出力の設定
     initialize_logger()
-    print("ロガーの初期化が完了しました")
-    logger = logging.getLogger(ct.LOGGER_NAME)
-    logger.info("セッション状態の初期化が完了しました")
-    logger.info("セッションIDの生成が完了しました")
-    logger.info("ロガーの初期化が完了しました")
     # RAGのRetrieverを作成
     initialize_retriever()
-    print("Retrieverの初期化が完了しました")
-    logger.info("Retrieverの初期化が完了しました")
+
+
+def initialize_logger():
+    """
+    ログ出力の設定
+    """
+    # 指定のログフォルダが存在すれば読み込み、存在しなければ新規作成
+    os.makedirs(ct.LOG_DIR_PATH, exist_ok=True)
+    
+    # 引数に指定した名前のロガー（ログを記録するオブジェクト）を取得
+    # 再度別の箇所で呼び出した場合、すでに同じ名前のロガーが存在していれば読み込む
     logger = logging.getLogger(ct.LOGGER_NAME)
 
     # すでにロガーにハンドラー（ログの出力先を制御するもの）が設定されている場合、同じログ出力が複数回行われないよう処理を中断する
@@ -186,17 +186,17 @@ def recursive_file_check(path, docs_all):
         docs_all: データソースを格納する用のリスト
     """
     # パスがフォルダかどうかを確認
-    logger = logging.getLogger(ct.LOGGER_NAME)
     if os.path.isdir(path):
-        print(f"ディレクトリ探索: {path}")
-        logger.info(f"ディレクトリ探索: {path}")
+        # フォルダの場合、フォルダ内のファイル/フォルダ名の一覧を取得
         files = os.listdir(path)
+        # 各ファイル/フォルダに対して処理
         for file in files:
+            # ファイル/フォルダ名だけでなく、フルパスを取得
             full_path = os.path.join(path, file)
+            # フルパスを渡し、再帰的にファイル読み込みの関数を実行
             recursive_file_check(full_path, docs_all)
     else:
-        print(f"ファイル検出: {path}")
-        logger.info(f"ファイル検出: {path}")
+        # パスがファイルの場合、ファイル読み込み
         file_load(path, docs_all)
 
 
@@ -214,18 +214,11 @@ def file_load(path, docs_all):
     file_name = os.path.basename(path)
 
     # 想定していたファイル形式の場合のみ読み込む
-    logger = logging.getLogger(ct.LOGGER_NAME)
     if file_extension in ct.SUPPORTED_EXTENSIONS:
-        print(f"対応拡張子: {file_extension} 読み込み開始: {path}")
-        logger.info(f"対応拡張子: {file_extension} 読み込み開始: {path}")
+        # ファイルの拡張子に合ったdata loaderを使ってデータ読み込み
         loader = ct.SUPPORTED_EXTENSIONS[file_extension](path)
         docs = loader.load()
-        print(f"読み込み完了: {path} ドキュメント数: {len(docs)}")
-        logger.info(f"読み込み完了: {path} ドキュメント数: {len(docs)}")
         docs_all.extend(docs)
-    else:
-        print(f"未対応拡張子: {file_extension} スキップ: {path}")
-        logger.info(f"未対応拡張子: {file_extension} スキップ: {path}")
 
 def adjust_string(s):
     """
