@@ -111,7 +111,18 @@ def initialize_retriever():
             doc.metadata[key] = adjust_string(doc.metadata[key])
     
     # 埋め込みモデルの用意
-    embeddings = OpenAIEmbeddings(api_key=st.secrets["OPENAI_API_KEY"])
+    # --- Embeddings生成（modelも明示） ---
+    from pydantic.v1.error_wrappers import ValidationError
+
+    try:
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",      # ここはこのままでOK
+            api_key=st.secrets["OPENAI_API_KEY"] # ここもそのまま
+        )
+    except ValidationError as e:
+        st.error("OpenAIEmbeddings の設定値で検証エラーが出ています（詳細 ↓ ）")
+        st.json(e.errors())   # ← どのフィールドで落ちてるかが表示されます
+        st.stop()
     
     # チャンク分割用のオブジェクトを作成
     text_splitter = CharacterTextSplitter(
