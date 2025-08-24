@@ -10,6 +10,12 @@ import streamlit as st
 import utils
 import constants as ct
 
+# --- APIキー確認と設定 ---
+key = st.secrets.get("OPENAI_API_KEY", "")
+if not key.startswith("sk-"):
+    st.error("OPENAI_API_KEY が正しく設定されていません。Settings → Secrets を確認してください。")
+    st.stop()
+os.environ["OPENAI_API_KEY"] = key  # 念のため環境変数にも反映
 ############################################################
 # 関数定義
 ############################################################
