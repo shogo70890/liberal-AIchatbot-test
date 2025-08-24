@@ -10,16 +10,19 @@
 import logging
 # streamlitアプリの表示を担当するモジュール
 import streamlit as st
+# （自作）変数（定数）がまとめて定義・管理されているモジュール
+import constants as ct
+
 # ブラウザタブの表示文言を設定
 st.set_page_config(
     page_title=ct.APP_NAME
 )
-
 # app.py のかなり上の方で（Chroma を読む前に）
 try:
     import pysqlite3  # sqlite3 の代替を先に読み込む
     import sys
     sys.modules["sqlite3"] = pysqlite3
+    
 except Exception:
     pass
 # （自作）画面表示以外の様々な関数が定義されているモジュール
@@ -28,9 +31,6 @@ import utils
 from initialize import initialize
 # （自作）画面表示系の関数が定義されているモジュール
 import components as cn
-# （自作）変数（定数）がまとめて定義・管理されているモジュール
-import constants as ct
-
 
 ############################################################
 # 2. 設定関連
