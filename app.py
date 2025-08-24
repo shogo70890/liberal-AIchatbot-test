@@ -20,6 +20,7 @@ import components as cn
 import constants as ct
 
 # --- APIキー確認と設定 ---
+import os
 key = st.secrets.get("OPENAI_API_KEY", "")
 if not key.startswith("sk-"):
     st.error("OPENAI_API_KEY が正しく設定されていません。Settings → Secrets を確認してください。")
