@@ -28,12 +28,16 @@ def initialize():
     """
     # 初期化データの用意
     initialize_session_state()
+    st.toast("セッション状態の初期化が完了しました")
     # ログ出力用にセッションIDを生成
     initialize_session_id()
+    st.toast("セッションIDの生成が完了しました")
     # ログ出力の設定
     initialize_logger()
+    st.toast("ロガーの初期化が完了しました")
     # RAGのRetrieverを作成
     initialize_retriever()
+    st.toast("Retrieverの初期化が完了しました")
 
 
 def initialize_logger():
