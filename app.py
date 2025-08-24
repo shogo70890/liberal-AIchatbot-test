@@ -1,6 +1,19 @@
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
+# ブラウザタブの表示文言を設定
+st.set_page_config(
+    page_title=ct.APP_NAME
+)
+
+
+# app.py のかなり上の方で（Chroma を読む前に）
+try:
+    import pysqlite3  # sqlite3 の代替を先に読み込む
+    import sys
+    sys.modules["sqlite3"] = pysqlite3
+except Exception:
+    pass
 
 ############################################################
 # 1. ライブラリの読み込み
@@ -23,26 +36,12 @@ import constants as ct
 ############################################################
 # 2. 設定関連
 ############################################################
-# ブラウザタブの表示文言を設定
-st.set_page_config(
-    page_title=ct.APP_NAME
-)
-
 # ログ出力を行うためのロガーの設定
 logger = logging.getLogger(ct.LOGGER_NAME)
 
 ############################################################
 # 3. 初期化処理
 ############################################################
-
-# app.py のかなり上の方で（Chroma を読む前に）
-try:
-    import pysqlite3  # sqlite3 の代替を先に読み込む
-    import sys
-    sys.modules["sqlite3"] = pysqlite3
-except Exception:
-    pass
-
 # 初期化処理（「initialize.py」の「initialize」関数を実行）
 initialize()
 

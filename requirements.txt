@@ -16,6 +16,7 @@ cachetools==5.5.1
 certifi==2024.12.14
 charset-normalizer==3.4.1
 chromadb==0.5.4
+pysqlite3-binary==0.5.3
 click==8.1.8
 colorama==0.4.6
 coloredlogs==15.0.1
