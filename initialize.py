@@ -28,21 +28,12 @@ def initialize():
     """
     # 初期化データの用意
     initialize_session_state()
-    print("セッション状態の初期化が完了しました")
-    logger = logging.getLogger(ct.LOGGER_NAME)
-    logger.info("セッション状態の初期化が完了しました")
     # ログ出力用にセッションIDを生成
     initialize_session_id()
-    print("セッションIDの生成が完了しました")
-    logger.info("セッションIDの生成が完了しました")
     # ログ出力の設定
     initialize_logger()
-    print("ロガーの初期化が完了しました")
-    logger.info("ロガーの初期化が完了しました")
     # RAGのRetrieverを作成
     initialize_retriever()
-    print("Retrieverの初期化が完了しました")
-    logger.info("Retrieverの初期化が完了しました")
 
 
 def initialize_logger():
