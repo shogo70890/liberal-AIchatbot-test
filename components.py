@@ -35,7 +35,7 @@ def display_initial_ai_message():
     # サイドバーに社内問い合わせの機能説明のみ表示
     with st.sidebar:
         st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")
-        st.code("【入力例】\n料金体系について教えて", wrap_lines=True, language=None)
+        st.code("【入力例】\n料金体系について詳しく教えて", wrap_lines=True, language=None)
 
 
 def display_conversation_log():
