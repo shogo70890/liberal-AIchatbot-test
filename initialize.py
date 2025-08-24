@@ -18,11 +18,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import constants as ct
 
-############################################################
-# 設定関連
-############################################################
-from dotenv import load_dotenv
-load_dotenv()
+
 ############################################################
 # 関数定義
 ############################################################
