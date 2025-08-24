@@ -106,35 +106,43 @@ def initialize_retriever():
 
     # すでにRetrieverが作成済みの場合、後続の処理を中断
     if "retriever" in st.session_state:
+        print("Retrieverは既に作成済みです")
         return
-    
-    # RAGの参照先となるデータソースの読み込み
-    docs_all = load_data_sources()
 
-    # OSがWindowsの場合、Unicode正規化と、cp932（Windows用の文字コード）で表現できない文字を除去
+    print("データソースの読み込み開始")
+    docs_all = load_data_sources()
+    print(f"データソースの読み込み完了: {len(docs_all)}件")
+
+    print("文字列調整処理開始")
     for doc in docs_all:
         doc.page_content = adjust_string(doc.page_content)
         for key in doc.metadata:
             doc.metadata[key] = adjust_string(doc.metadata[key])
-    
-    # 埋め込みモデルの用意
+    print("文字列調整処理完了")
+
+    print("埋め込みモデルの用意開始")
     embeddings = OpenAIEmbeddings(api_key=st.secrets["OPENAI_API_KEY"])
-    
-    # チャンク分割用のオブジェクトを作成
+    print("埋め込みモデルの用意完了")
+
+    print("チャンク分割オブジェクト作成開始")
     text_splitter = CharacterTextSplitter(
         chunk_size=ct.CHUNK_SIZE,
         chunk_overlap=ct.CHUNK_OVERLAP,
         separator="\n"
     )
+    print("チャンク分割オブジェクト作成完了")
 
-    # チャンク分割を実施
+    print("チャンク分割処理開始")
     splitted_docs = text_splitter.split_documents(docs_all)
+    print(f"チャンク分割処理完了: {len(splitted_docs)}件")
 
-    # ベクターストアの作成
+    print("ベクターストア作成開始")
     db = Chroma.from_documents(splitted_docs, embedding=embeddings)
+    print("ベクターストア作成完了")
 
-    # ベクターストアを検索するRetrieverの作成
+    print("Retriever作成開始")
     st.session_state.retriever = db.as_retriever(search_kwargs={"k": 3})
+    print("Retriever作成完了")
 
 
 def initialize_session_state():
