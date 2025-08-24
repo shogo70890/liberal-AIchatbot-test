@@ -31,10 +31,6 @@ st.set_page_config(
 # ログ出力を行うためのロガーの設定
 logger = logging.getLogger(ct.LOGGER_NAME)
 
-import inspect, logging, app
-logging.info("\n".join(inspect.getsource(app).splitlines()[40:50]))
-
-
 ############################################################
 # 3. 初期化処理
 ############################################################
