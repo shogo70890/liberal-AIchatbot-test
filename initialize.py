@@ -29,22 +29,22 @@ def initialize():
     # 初期化データの用意
     initialize_session_state()
     # ログ出力用にセッションIDを生成
+    initialize_session_state()
+    print("セッション状態の初期化が完了しました")
+    # ログ出力用にセッションIDを生成
     initialize_session_id()
+    print("セッションIDの生成が完了しました")
     # ログ出力の設定
     initialize_logger()
+    print("ロガーの初期化が完了しました")
+    logger = logging.getLogger(ct.LOGGER_NAME)
+    logger.info("セッション状態の初期化が完了しました")
+    logger.info("セッションIDの生成が完了しました")
+    logger.info("ロガーの初期化が完了しました")
     # RAGのRetrieverを作成
     initialize_retriever()
-
-
-def initialize_logger():
-    """
-    ログ出力の設定
-    """
-    # 指定のログフォルダが存在すれば読み込み、存在しなければ新規作成
-    os.makedirs(ct.LOG_DIR_PATH, exist_ok=True)
-    
-    # 引数に指定した名前のロガー（ログを記録するオブジェクト）を取得
-    # 再度別の箇所で呼び出した場合、すでに同じ名前のロガーが存在していれば読み込む
+    print("Retrieverの初期化が完了しました")
+    logger.info("Retrieverの初期化が完了しました")
     logger = logging.getLogger(ct.LOGGER_NAME)
 
     # すでにロガーにハンドラー（ログの出力先を制御するもの）が設定されている場合、同じログ出力が複数回行われないよう処理を中断する
