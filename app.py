@@ -1,19 +1,6 @@
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
-# ブラウザタブの表示文言を設定
-st.set_page_config(
-    page_title=ct.APP_NAME
-)
-
-
-# app.py のかなり上の方で（Chroma を読む前に）
-try:
-    import pysqlite3  # sqlite3 の代替を先に読み込む
-    import sys
-    sys.modules["sqlite3"] = pysqlite3
-except Exception:
-    pass
 
 ############################################################
 # 1. ライブラリの読み込み
@@ -23,6 +10,18 @@ except Exception:
 import logging
 # streamlitアプリの表示を担当するモジュール
 import streamlit as st
+# ブラウザタブの表示文言を設定
+st.set_page_config(
+    page_title=ct.APP_NAME
+)
+
+# app.py のかなり上の方で（Chroma を読む前に）
+try:
+    import pysqlite3  # sqlite3 の代替を先に読み込む
+    import sys
+    sys.modules["sqlite3"] = pysqlite3
+except Exception:
+    pass
 # （自作）画面表示以外の様々な関数が定義されているモジュール
 import utils
 # （自作）アプリ起動時に実行される初期化処理が記述された関数
