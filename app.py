@@ -19,13 +19,6 @@ import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
 
-# app.py のかなり上の方で（Chroma を読む前に）
-try:
-    import pysqlite3  # sqlite3 の代替を先に読み込む
-    import sys
-    sys.modules["sqlite3"] = pysqlite3
-except Exception:
-    pass
 
 ############################################################
 # 2. 設定関連
@@ -45,6 +38,15 @@ logging.info("\n".join(inspect.getsource(app).splitlines()[40:50]))
 ############################################################
 # 3. 初期化処理
 ############################################################
+
+# app.py のかなり上の方で（Chroma を読む前に）
+try:
+    import pysqlite3  # sqlite3 の代替を先に読み込む
+    import sys
+    sys.modules["sqlite3"] = pysqlite3
+except Exception:
+    pass
+
 # 初期化処理（「initialize.py」の「initialize」関数を実行）
 initialize()
 
