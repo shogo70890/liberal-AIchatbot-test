@@ -107,42 +107,57 @@ def initialize_retriever():
     # すでにRetrieverが作成済みの場合、後続の処理を中断
     if "retriever" in st.session_state:
         print("Retrieverは既に作成済みです")
+        logger.info("Retrieverは既に作成済みです")
         return
 
     print("データソースの読み込み開始")
+    logger.info("データソースの読み込み開始")
     docs_all = load_data_sources()
     print(f"データソースの読み込み完了: {len(docs_all)}件")
+    logger.info(f"データソースの読み込み完了: {len(docs_all)}件")
 
     print("文字列調整処理開始")
+    logger.info("文字列調整処理開始")
     for doc in docs_all:
         doc.page_content = adjust_string(doc.page_content)
         for key in doc.metadata:
             doc.metadata[key] = adjust_string(doc.metadata[key])
     print("文字列調整処理完了")
+    logger.info("文字列調整処理完了")
 
     print("埋め込みモデルの用意開始")
+    logger.info("埋め込みモデルの用意開始")
     embeddings = OpenAIEmbeddings(api_key=st.secrets["OPENAI_API_KEY"])
     print("埋め込みモデルの用意完了")
+    logger.info("埋め込みモデルの用意完了")
 
     print("チャンク分割オブジェクト作成開始")
+    logger.info("チャンク分割オブジェクト作成開始")
     text_splitter = CharacterTextSplitter(
         chunk_size=ct.CHUNK_SIZE,
         chunk_overlap=ct.CHUNK_OVERLAP,
         separator="\n"
     )
     print("チャンク分割オブジェクト作成完了")
+    logger.info("チャンク分割オブジェクト作成完了")
 
     print("チャンク分割処理開始")
+    logger.info("チャンク分割処理開始")
     splitted_docs = text_splitter.split_documents(docs_all)
     print(f"チャンク分割処理完了: {len(splitted_docs)}件")
+    logger.info(f"チャンク分割処理完了: {len(splitted_docs)}件")
 
     print("ベクターストア作成開始")
+    logger.info("ベクターストア作成開始")
     db = Chroma.from_documents(splitted_docs, embedding=embeddings)
     print("ベクターストア作成完了")
+    logger.info("ベクターストア作成完了")
 
     print("Retriever作成開始")
+    logger.info("Retriever作成開始")
     st.session_state.retriever = db.as_retriever(search_kwargs={"k": 3})
     print("Retriever作成完了")
+    logger.info("Retriever作成完了")
 
 
 def initialize_session_state():
