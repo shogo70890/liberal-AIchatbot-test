@@ -1,3 +1,4 @@
+import logging
 """
 このファイルは、画面表示以外の様々な関数定義のファイルです。
 """
@@ -15,6 +16,10 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import constants as ct
 
+############################################################
+# 設定関連
+############################################################
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 ############################################################
 # 関数定義
@@ -63,7 +68,7 @@ def get_llm_response(chat_message):
         LLMからの回答
     """
     # LLMのオブジェクトを用意
-    llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE, api_key=st.secrets["OPENAI_API_KEY"])
+    llm = ChatOpenAI(model=ct.MODEL, temperature=ct.TEMPERATURE)
 
     # 会話履歴なしでもLLMに理解してもらえる、独立した入力テキストを取得するためのプロンプトテンプレートを作成
     question_generator_template = ct.SYSTEM_PROMPT_CREATE_INDEPENDENT_TEXT
@@ -75,8 +80,9 @@ def get_llm_response(chat_message):
         ]
     )
 
-    # 問い合わせモードのみ対応
+    # 問い合わせモードのプロンプト
     question_answer_template = ct.SYSTEM_PROMPT_INQUIRY
+    # LLMから回答を取得する用のプロンプトテンプレートを作成
     question_answer_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", question_answer_template),
@@ -84,13 +90,20 @@ def get_llm_response(chat_message):
             ("human", "{input}")
         ]
     )
+
+    # 会話履歴なしでもLLMに理解してもらえる、独立した入力テキストを取得するためのRetrieverを作成
+    history_aware_retriever = create_history_aware_retriever(
+        llm, st.session_state.retriever, question_generator_prompt
+    )
+
     # LLMから回答を取得する用のChainを作成
     question_answer_chain = create_stuff_documents_chain(llm, question_answer_prompt)
-    # 会話履歴を直接渡してChainを実行
-    llm_response = question_answer_chain.invoke({"input": chat_message, "chat_history": st.session_state.chat_history})
+    # 「RAG x 会話履歴の記憶機能」を実現するためのChainを作成
+    chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+
+    # LLMへのリクエストとレスポンス取得
+    llm_response = chain.invoke({"input": chat_message, "chat_history": st.session_state.chat_history})
     # LLMレスポンスを会話履歴に追加
     st.session_state.chat_history.extend([HumanMessage(content=chat_message), llm_response["answer"]])
-    # contextキーがなければ空リストを追加（components.pyで必ず参照されるため）
-    if "context" not in llm_response:
-        llm_response["context"] = []
+
     return llm_response

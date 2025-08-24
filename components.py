@@ -10,7 +10,6 @@ import streamlit as st
 import utils
 import constants as ct
 
-
 ############################################################
 # 関数定義
 ############################################################
@@ -29,14 +28,14 @@ def display_initial_ai_message():
     # メイン画面中央にAIの初期メッセージのみ表示
     with st.chat_message("assistant"):
         # 「st.success()」とすると緑枠で表示される
-        st.success("こんにちは。私は社内文書の情報をもとに回答する生成AIチャットボットです。サイドバーで利用目的を選択し、画面下部のチャット欄からメッセージを送信してください。")
+        st.success("こんにちは。私は社内文書の情報をもとに回答する生成AIチャットボットです。\n画面下部のチャット欄からメッセージを送信してください。")
         # 黄色背景の注意文を追加
         st.warning(f"{ct.WARNING_ICON} 具体的に入力したほうが期待通りの回答を得やすいです。")
 
     # サイドバーに社内問い合わせの機能説明のみ表示
     with st.sidebar:
         st.info("質問・要望に対して、社内文書の情報をもとに回答を得られます。")
-        st.code("【入力例】\n人事部に所属している従業員情報を一覧化して", wrap_lines=True, language=None)
+        st.code("【入力例】\n料金体系について教えて", wrap_lines=True, language=None)
 
 
 def display_conversation_log():
