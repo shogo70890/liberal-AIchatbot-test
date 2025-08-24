@@ -1,3 +1,5 @@
+# app.py
+import utils   # ← ここでキー設定が走る
 """
 このファイルは、Webアプリのメイン処理が記述されたファイルです。
 """
@@ -19,13 +21,6 @@ import components as cn
 # （自作）変数（定数）がまとめて定義・管理されているモジュール
 import constants as ct
 
-# --- APIキー確認と設定 ---
-import os
-key = st.secrets.get("OPENAI_API_KEY", "")
-if not key.startswith("sk-"):
-    st.error("OPENAI_API_KEY が正しく設定されていません。Settings → Secrets を確認してください。")
-    st.stop()
-os.environ["OPENAI_API_KEY"] = key  # 念のため環境変数にも反映
 ############################################################
 # 2. 設定関連
 ############################################################
